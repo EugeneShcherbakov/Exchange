@@ -13,8 +13,14 @@ import java.security.cert.X509Certificate;
 
 public class Main {
 
-    public static void main(String[] args) {
-
+    public static void main(String[] args){
+        disableSSL();
+        try {
+            String responce = getLatestExchangeRates();
+            System.out.println(responce);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
