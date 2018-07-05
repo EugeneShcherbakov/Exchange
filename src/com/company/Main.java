@@ -13,16 +13,35 @@ public class Main {
 
     public static void main(String[] args){
         disableSSL();
+        StringBuilder str = new StringBuilder();
+        int count =0;
+
         try {
             String responce = getLatestExchangeRates();
             if(responce == null){
                 return;
             }
-            writeToFile(responce);
+            for(int i=0; i<responce.length(); i++){
+                str.append(responce.charAt(i));
+                if (responce.charAt(i) == '{') {
+                    str.append("\n");
+                    str.append("\t");
+                    count++;
+                    if(count>0){str.append("\t");}
+                }else if(responce.charAt(i) == ','){
+                    str.append("\n");
+                    str.append("\t");
+                }else if(responce.charAt(i) == '}'){
+                    str.append("\n");
+                }
+//                str.append(responce.charAt(i));
+            }
+            writeToFile(str.toString());
             System.out.println(responce);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        readFromFile();
 
 
     }
@@ -73,17 +92,30 @@ public class Main {
             e.printStackTrace();
         }
     }
-    private String readFromFile(){
+    private static String readFromFile(){
+        try(FileReader fileReader = new FileReader("Test.txt")) {
+            int c;
+            while ((c=fileReader.read())!= -1){
+                System.out.print((char)c);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return null;
     }
     private static void writeToFile(String text){
 
-        try(FileOutputStream fos = new FileOutputStream("Test.txt");
-            BufferedOutputStream out = new BufferedOutputStream(fos)) {
+//        try(FileOutputStream fos = new FileOutputStream("Test.txt");
+//            BufferedOutputStream out = new BufferedOutputStream(fos)) {
+        try(FileWriter writer = new FileWriter("Test.txt")) {
 
-            byte[] bytes = text.getBytes();
-            out.write(bytes);
-            out.flush();
+            writer.write(text);
+            //writer.append("\n");
+            //writer.write(text);
+            writer.flush();
+//            byte[] bytes = text.getBytes();
+//            out.write(bytes);
+//            out.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
