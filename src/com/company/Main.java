@@ -4,9 +4,7 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.cert.X509Certificate;
@@ -17,10 +15,15 @@ public class Main {
         disableSSL();
         try {
             String responce = getLatestExchangeRates();
+            if(responce == null){
+                return;
+            }
+            writeToFile(responce);
             System.out.println(responce);
         } catch (Exception e) {
             e.printStackTrace();
         }
+
 
     }
 
@@ -69,5 +72,21 @@ public class Main {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    private String readFromFile(){
+        return null;
+    }
+    private static void writeToFile(String text){
+
+        try(FileOutputStream fos = new FileOutputStream("Test.txt");
+            BufferedOutputStream out = new BufferedOutputStream(fos)) {
+
+            byte[] bytes = text.getBytes();
+            out.write(bytes);
+            out.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }
